@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, Depends, Header, Request, APIRouter
 from pydantic import *
+from typing import Union, List
 import uvicorn
 import json
 import subprocess
@@ -13,8 +14,13 @@ port = os.environ.get("PORT", "8080")
 SECRET_HEADER_KEY = "X-MyGCP-Secret"
 
 class Command(BaseModel):
-    command: str = ""
-    secret: str = ""
+    command: str
+    secret: Union[str, None] = None
+
+class Output(BaseModel):
+    stdout_output: List[str]
+    stderr_output: List[str]
+    return_code: int
 
 @app.post("/shellcommand")
 def cmd(command: Command, request: Request, x_mygcp_secret = Header(default=None)):
@@ -29,10 +35,9 @@ def cmd(command: Command, request: Request, x_mygcp_secret = Header(default=None
     stdout_output = proc.stdout.split("\n")
     stderr_output = proc.stderr.split("\n")
 
-    return json.dumps({"stdout_output":stdout_output, "stderr_output":stderr_output, "return_code":proc.returncode})
+    return Output(stderr_output=stderr_output, stdout_output=stdout_output, return_code=proc.returncode)
 
 if __name__ == "__main__":
-    # app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
     options = {
             'port': int(port),
             'host': '0.0.0.0',
