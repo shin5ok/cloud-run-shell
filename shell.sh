@@ -17,4 +17,4 @@ fi
 
 CMD="{\"command\": \"$@\"}"
 echo $CMD
-echo $CMD | curl -H "${AUTH_HEADER}: $SECRET" $URL/shellcommand -d @- | jq .
+echo $CMD | curl -s -H "Content-Type: application/json" -H "${AUTH_HEADER}: $SECRET" $URL/shellcommand -d @- | jq .

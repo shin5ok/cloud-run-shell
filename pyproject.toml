@@ -11,6 +11,8 @@ authors = ["shin5ok <shin5ok@55mp.com>"]
 python = "^3.10"
 Flask = "^2.3.2"
 gunicorn = "^20.1.0"
+fastapi = "^0.97.0"
+uvicorn = "^0.22.0"
 
 [tool.poetry.dev-dependencies]
 
