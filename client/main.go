@@ -12,12 +12,6 @@ import (
 	"strings"
 )
 
-var (
-	secret     = "gcp"
-	authHeader = "X-MyGCP-Seret"
-	url        = os.Getenv("URL")
-)
-
 type Commanding struct {
 	Command string `json:"command"`
 }
@@ -28,19 +22,26 @@ type Responsing struct {
 	ReturnCode int    `json:"return_code"`
 }
 
+var (
+	secret     = "gcp"
+	authHeader = "X-MyGCP-Secret"
+	url        = os.Getenv("URL")
+)
+
 func main() {
-	cmd := Commanding{Command: strings.Join(os.Args, " ")}
+	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
 	data, _ := json.Marshal(cmd)
 	ctx := context.Background()
 	req, err := http.NewRequestWithContext(
 		ctx,
 		"POST",
-		url,
+		url+"/shellcommand",
 		bytes.NewBuffer(data),
 	)
 	req.Header.Add(authHeader, secret)
+	// fmt.Printf("%+v\n", req)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err, req)
 	}
 
 	client := &http.Client{}
