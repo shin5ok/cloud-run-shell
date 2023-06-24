@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Depends, Header, Request, APIRouter
+from fastapi import FastAPI, Depends, Header, Request, Response, APIRouter, status
 from pydantic import *
 from typing import Union, List
 import uvicorn
@@ -23,12 +23,13 @@ class Output(BaseModel):
     return_code: int
 
 @app.post("/shellcommand")
-def cmd(command: Command, request: Request, x_mygcp_secret = Header(default=None)):
+def cmd(command: Command, request: Request, response: Response, x_mygcp_secret = Header(default=None)):
 
     cmd_str = command.command
     secret_in_request = x_mygcp_secret
 
     if secret and command.secret != secret and secret != secret_in_request:
+        response.status_code = 503
         return {"output":f"Invalid auth. Set {SECRET_HEADER_KEY} with valid secret value."}
 
     proc = subprocess.run(cmd_str, shell=True, stdout=PIPE, stderr=PIPE, text=True)
