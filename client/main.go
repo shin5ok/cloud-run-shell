@@ -23,7 +23,7 @@ type Responsing struct {
 }
 
 var (
-	secret     = "gcp"
+	secret     = os.Getenv("SECRET")
 	authHeader = "X-MyGCP-Secret"
 	url        = os.Getenv("URL")
 )
@@ -38,8 +38,12 @@ func main() {
 		url+"/shellcommand",
 		bytes.NewBuffer(data),
 	)
+
+	if secret == "" {
+		secret = "gcp"
+	}
+
 	req.Header.Add(authHeader, secret)
-	// fmt.Printf("%+v\n", req)
 	if err != nil {
 		log.Fatal(err, req)
 	}
