@@ -13,8 +13,8 @@ import (
 )
 
 var (
+	secret     = "gcp"
 	authHeader = "X-MyGCP-Seret"
-	secret     string
 	url        = os.Getenv("URL")
 )
 
