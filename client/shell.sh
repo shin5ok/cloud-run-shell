@@ -3,7 +3,7 @@
 AUTH_HEADER="X-MyGCP-Secret"
 SECRET=gcp
 
-if test -z $@ ;
+if [ $# -lt 0 ] ;
 then
     cat << EOM
     Usage:
@@ -17,4 +17,4 @@ fi
 
 CMD="{\"command\": \"$@\"}"
 echo $CMD
-echo $CMD | curl -s -H "Content-Type: application/json" -H "${AUTH_HEADER}: $SECRET" $URL/shellcommand -d @- | jq .
+echo $CMD | curl -s -H "Content-Type: application/json" -H "${AUTH_HEADER}: $SECRET" $URL/shellcommand -d @-
