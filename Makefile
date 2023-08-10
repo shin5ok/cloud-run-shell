@@ -1,7 +1,7 @@
 
 .PHONY: client
 client:
-	( cd client ; go build -o client . )
+	( cd client ; go build -o shell . )
 
 .PHONY: deploy
 deploy:
