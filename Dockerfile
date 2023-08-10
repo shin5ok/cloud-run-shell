@@ -2,6 +2,7 @@ FROM python:3.10-slim
 
 COPY . .
 RUN pip install poetry
+RUN poetry config virtualenvs.in-project true
 RUN poetry install
 RUN apt-get update && apt-get install -y curl iproute2 git procps net-tools build-essential iperf3
 
