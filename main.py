@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, Depends, Header, Request, Response, APIRouter, status
+from fastapi.responses import JSONResponse
 from pydantic import *
 from typing import Union, List
 import uvicorn
@@ -26,14 +27,6 @@ class Output(BaseModel):
 def cmd(command: Command, request: Request, response: Response, x_mygcp_secret = Header(default=None)):
 
     cmd_str = command.command
-    secret_in_request = x_mygcp_secret
-
-    if secret and command.secret != secret and secret != secret_in_request:
-        response.status_code = 503
-        return Output(
-                message=f"Invalid auth. Set {secret_header_key} with valid secret value.",
-                return_code=1,
-            )
 
     proc = subprocess.run(cmd_str, shell=True, stdout=PIPE, stderr=PIPE, text=True)
     stdout_output = proc.stdout.split("\n")
@@ -45,11 +38,26 @@ def cmd(command: Command, request: Request, response: Response, x_mygcp_secret =
             return_code=proc.returncode,
         )
 
+@app.middleware("http")
+async def simple_auth(request: Request, call_next):
+    response = await call_next(request)
+    secret_in_request = request.headers[secret_header_key]
+
+    if secret != secret_in_request:
+        message = "request forbidden"
+        print(message, secret, secret_in_request)
+        return JSONResponse(
+            dict(message=message, secret=secret_in_request),
+            status.HTTP_403_FORBIDDEN
+        )
+
+    return response
+
 if __name__ == "__main__":
     options = {
             'port': int(port),
             'host': '0.0.0.0',
-            'workers': 2,
+            'workers': 1,
             'reload': True,
         }
     uvicorn.run("main:app", **options)
