@@ -9,7 +9,7 @@ import subprocess
 from subprocess import PIPE
 
 app = FastAPI()
-secret = os.environ.get("SECRET")
+secret = os.environ.get("SECRET", "gcp")
 port = os.environ.get("PORT", "8080")
 secret_header_key = "X-MyGCP-Secret"
 
