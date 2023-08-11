@@ -39,10 +39,6 @@ func main() {
 		bytes.NewBuffer(data),
 	)
 
-	if secret == "" {
-		secret = "gcp"
-	}
-
 	req.Header.Add(authHeader, secret)
 	if err != nil {
 		log.Fatal(err, req)
