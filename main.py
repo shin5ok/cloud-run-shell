@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 from pydantic import *
 from typing import Union, List
 import uvicorn
-import json
 import subprocess
 from subprocess import PIPE
 
@@ -41,13 +40,19 @@ def cmd(command: Command, request: Request, response: Response, x_mygcp_secret =
 @app.middleware("http")
 async def simple_auth(request: Request, call_next):
     response = await call_next(request)
-    secret_in_request = request.headers[secret_header_key]
+    secret_in_request = request.headers.get(secret_header_key)
+
+    if not secret_in_request:
+        message = "auth required"
+        return JSONResponse(
+            dict(message=message),
+            status.HTTP_401_UNAUTHORIZED
+        )
 
     if secret != secret_in_request:
-        message = "request forbidden"
-        print(message, secret, secret_in_request)
+        message = "auth error"
         return JSONResponse(
-            dict(message=message, secret=secret_in_request),
+            dict(message=message),
             status.HTTP_403_FORBIDDEN
         )
 
