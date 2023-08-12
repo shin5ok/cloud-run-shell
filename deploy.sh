@@ -1,5 +1,7 @@
+SECRET=${SECRET:-gcp}
+
 gcloud run deploy shellcommand --source=. \
-    --set-env-vars=SECRET=gcp \
+    --set-env-vars=SECRET=${SECRET} \
     --region=asia-northeast1 \
     --execution-environment=gen2 \
     --memory=1Gi \
