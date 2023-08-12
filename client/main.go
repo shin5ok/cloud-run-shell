@@ -26,6 +26,7 @@ var (
 	secret     = os.Getenv("SECRET")
 	authHeader = "X-MyGCP-Secret"
 	url        = os.Getenv("URL")
+	token      = os.Getenv("TOKEN")
 )
 
 func main() {
@@ -42,6 +43,10 @@ func main() {
 	req.Header.Add(authHeader, secret)
 	if err != nil {
 		log.Fatal(err, req)
+	}
+
+	if token != "" {
+		req.Header.Add(`Authorization`, "Bearer "+token)
 	}
 
 	client := &http.Client{}
