@@ -8,7 +8,7 @@
 export SECRET=<your secret>
 export URL=<url of Cloud Run service>
 ```
-If the Cloud Run sevice requires ID Token,
+If the Cloud Run sevice requires ID Token, run as below,
 ```
 export TOKEN=$(gcloud auth print-identity-token)
 ```
