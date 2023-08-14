@@ -52,11 +52,14 @@ func main() {
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(res.Status, err)
 	}
 	defer res.Body.Close()
 
-	response, _ := io.ReadAll(res.Body)
-	fmt.Println(string(response))
+	response, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Panic(err)
+	}
 
+	fmt.Println(string(response))
 }
