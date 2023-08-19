@@ -23,11 +23,20 @@ type Responsing struct {
 }
 
 var (
-	secret     = os.Getenv("SECRET")
 	authHeader = "X-MyGCP-Secret"
+	secret     = os.Getenv("SECRET")
 	url        = os.Getenv("URL")
 	token      = os.Getenv("TOKEN")
 )
+
+func init() {
+	if url == "" {
+		log.Fatal(`
+	Set url like this,
+	export URL=https://xxxxxxx-an.a.run.app
+		`)
+	}
+}
 
 func main() {
 	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
