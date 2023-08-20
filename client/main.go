@@ -10,6 +10,9 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
+
+	"github.com/briandowns/spinner"
 )
 
 type Commanding struct {
@@ -39,6 +42,10 @@ func init() {
 }
 
 func main() {
+
+	s := spinner.New(spinner.CharSets[1], 500*time.Millisecond)
+	s.Start()
+
 	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
 	data, _ := json.Marshal(cmd)
 	ctx := context.Background()
@@ -69,6 +76,8 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	s.Stop()
 
 	fmt.Println(string(response))
 }
