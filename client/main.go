@@ -19,10 +19,11 @@ type Commanding struct {
 	Command string `json:"command"`
 }
 
-type Responsing struct {
-	Stdout     string `json:"stdout_output"`
-	Stderr     string `json:"stderr_output"`
-	ReturnCode int    `json:"return_code"`
+type ResponseData struct {
+	Stdout     []string `json:"stdout_output"`
+	Stderr     []string `json:"stderr_output"`
+	Message    string   `json:"message"`
+	ReturnCode int      `json:"return_code"`
 }
 
 var (
@@ -30,6 +31,7 @@ var (
 	secret     = os.Getenv("SECRET")
 	url        = os.Getenv("URL")
 	token      = os.Getenv("TOKEN")
+	modeJson   = os.Getenv("MODE_JSON")
 )
 
 func init() {
@@ -43,7 +45,7 @@ func init() {
 
 func main() {
 
-	s := spinner.New(spinner.CharSets[1], 500*time.Millisecond)
+	s := spinner.New(spinner.CharSets[9], 300*time.Millisecond)
 	s.Start()
 
 	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
@@ -79,5 +81,18 @@ func main() {
 
 	s.Stop()
 
-	fmt.Println(string(response))
+	if modeJson != "" {
+		fmt.Println(string(response))
+		return
+	}
+
+	var r ResponseData
+	if err := json.Unmarshal(response, &r); err != nil {
+		log.Panic(err)
+	}
+
+	for _, line := range r.Stdout {
+		fmt.Println(line)
+	}
+
 }
