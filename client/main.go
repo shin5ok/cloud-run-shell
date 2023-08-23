@@ -94,7 +94,6 @@ func main() {
 	if r.ReturnCode != 0 {
 		for _, line := range r.Stderr {
 			fmt.Println(line)
-			return
 		}
 	}
 
