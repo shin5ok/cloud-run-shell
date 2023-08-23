@@ -101,4 +101,6 @@ func main() {
 		fmt.Println(line)
 	}
 
+	os.Exit(r.ReturnCode)
+
 }
