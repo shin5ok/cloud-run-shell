@@ -72,6 +72,11 @@ func main() {
 	if err != nil {
 		log.Fatal(res.Status, err)
 	}
+
+	if res.StatusCode != http.StatusOK {
+		log.Fatal("Something wrong...it might have invalid SECRET?")
+	}
+
 	defer res.Body.Close()
 
 	response, err := io.ReadAll(res.Body)
