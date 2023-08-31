@@ -31,7 +31,7 @@ var (
 	secret     = os.Getenv("SECRET")
 	url        = os.Getenv("URL")
 	token      = os.Getenv("TOKEN")
-	modeJson   = os.Getenv("MODE_JSON")
+	jsonMode   = os.Getenv("JSON_MODE")
 )
 
 func init() {
@@ -81,7 +81,7 @@ func main() {
 
 	s.Stop()
 
-	if modeJson != "" {
+	if jsonMode != "" {
 		fmt.Println(string(response))
 		return
 	}
