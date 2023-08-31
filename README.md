@@ -14,17 +14,25 @@ export TOKEN=$(gcloud auth print-identity-token)
 ```
 
 ### With CLI
-1. Build it to make client as 'client/shell' once.
+
+#### 1. Build it to make client as 'client/shell' once.
 ```
 make client
 ```
-2. Request
+Change directory to 'client'.
 ```
 cd client/
-./shell ps aux | jq .
+```
+You're ready to run something on your Cloud Run service.
+
+#### 2. Just Run it  
+
+Run it with your any command.
+```
+./shell ps aux
 ```
 
-### As REST with curl
+You may see output formatted JSON as below.
 ```
-echo '{"command":"ps aux"}' | curl -s -d @- -H "X-MyGCP-Secret: $SECRET" -H "Authorization: Bearer $TOKEN" $URL/shellcommand | jq .
+JSON_MODE=1 ./shell ps aux
 ```
