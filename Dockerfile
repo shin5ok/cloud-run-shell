@@ -6,6 +6,7 @@ COPY . .
 RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.in-project true
 
+
 RUN poetry install; \
     apt-get update && \
     apt-get install -y curl iproute2 git procps net-tools build-essential iperf3 qperf wget apache2 ; \
@@ -20,6 +21,9 @@ RUN poetry install; \
     apt-get clean
 
 RUN git clone https://github.com/kdlucas/byte-unixbench && cd byte-unixbench/UnixBench && make
+
+RUN curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-444.0.0-linux-x86_64.tar.gz | tar xzf - && ./google-cloud-sdk/install.sh ; \
+    ./google-cloud-sdk/bin/gcloud init; true
 
 ENV PYTHONUNBUFFERED true
 
