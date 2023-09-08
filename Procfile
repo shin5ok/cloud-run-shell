@@ -1,1 +1,1 @@
-web: gunicorn -b 0.0.0.0:8080 --timeout 300 main:app
+web: poetry run python main.py
