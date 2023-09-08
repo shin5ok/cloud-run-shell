@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -36,7 +35,7 @@ var (
 
 func init() {
 	if url == "" {
-		log.Fatal(`
+		panic(`
 	Set url like this,
 	export URL=https://xxxxxxx-an.a.run.app
 		`)
@@ -60,28 +59,28 @@ func main() {
 
 	req.Header.Add(authHeader, secret)
 	if err != nil {
-		log.Fatal(err, req)
+		panic(err)
 	}
 
 	if token != "" {
-		req.Header.Add(`Authorization`, "Bearer "+token)
+		req.Header.Add(`Authorization`, `Bearer `+token)
 	}
 
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		log.Fatal(res.Status, err)
+		panic(err)
 	}
 
 	if res.StatusCode != http.StatusOK {
-		log.Fatal("Something wrong...it might have invalid SECRET?")
+		panic(`Something wrong...it might have invalid SECRET?`)
 	}
 
 	defer res.Body.Close()
 
 	response, err := io.ReadAll(res.Body)
 	if err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
 	s.Stop()
@@ -93,7 +92,7 @@ func main() {
 
 	var r ResponseData
 	if err := json.Unmarshal(response, &r); err != nil {
-		log.Panic(err)
+		panic(err)
 	}
 
 	if r.ReturnCode != 0 {
