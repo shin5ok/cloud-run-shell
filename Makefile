@@ -8,4 +8,4 @@ deploy:
 
 .PHONY: bench
 bench:
-	( cd bench ; go test -timeout 3600m -bench . )
+	( cd bench ; go test -timeout 3600m -count 1 -bench . )
