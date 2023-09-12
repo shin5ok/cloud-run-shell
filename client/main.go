@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"os/signal"
 	"strings"
 	"time"
 
@@ -40,16 +41,23 @@ func init() {
 	export URL=https://xxxxxxx-an.a.run.app
 		`)
 	}
+
 }
 
 func main() {
+
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer stop()
 
 	s := spinner.New(spinner.CharSets[9], 300*time.Millisecond)
 	s.Start()
 
 	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
-	data, _ := json.Marshal(cmd)
-	ctx := context.Background()
+	data, err := json.Marshal(cmd)
+	if err != nil {
+		panic(err)
+	}
+
 	req, err := http.NewRequestWithContext(
 		ctx,
 		"POST",
