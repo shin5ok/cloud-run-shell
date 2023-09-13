@@ -1,0 +1,10 @@
+github.com/SermoDigital/helpers v0.0.0-20170320233626-8de2321850d4 h1:OpbP8L+4lEWTkcjZDRasEOF7KA9yzjvkISeDz+M1JCI=
+github.com/SermoDigital/helpers v0.0.0-20170320233626-8de2321850d4/go.mod h1:j8FxiosMdhJpDCvfE1Z67AgWg9jc4FR1184ldQ+Us9E=
+github.com/dgryski/go-pcgr v0.0.0-20211101192959-4b34ab9ccb8c h1:f26exq4Heidug80gN340GXU86doiFKGUYFluBO+mbDk=
+github.com/dgryski/go-pcgr v0.0.0-20211101192959-4b34ab9ccb8c/go.mod h1:ztV/u9hqJRBCT0P03v0Ueol7unBefCKL+paOoIZkR88=
+github.com/dgryski/go-xoroshiro v0.0.0-20210625010205-26d2b3edde97 h1:GXxCk9Tc+w59UHVavFBKti6KopveHUialfO3qZ3sQz4=
+github.com/dgryski/go-xoroshiro v0.0.0-20210625010205-26d2b3edde97/go.mod h1:1nArOX1ahGQWpRvbQiQDpMTp8cw1PyK+PyjUCbX3re4=
+github.com/mohae/joefriday v0.0.0-20170926205446-2d83fc975dd8 h1:MILeGfbowe+I3J2JBrj00dKIJted75Cr+hkPXwuajVY=
+github.com/mohae/joefriday v0.0.0-20170926205446-2d83fc975dd8/go.mod h1:l4omcEDS/+nariqcTsg5f9ye48TWTCumMvdBLrzuHCk=
+github.com/mohae/randchars v0.0.0-20170727203217-89ffe2e7dfda h1:XfGM7GvMmUGlY3+PdaIZ2KCqE92keIVvWJVPCdGerMY=
+github.com/mohae/randchars v0.0.0-20170727203217-89ffe2e7dfda/go.mod h1:TGdyxegKRezLvxaMVHMl6+bZty4XEW3nEahSQ212qI0=

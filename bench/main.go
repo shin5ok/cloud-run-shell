@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+
+	"github.com/mohae/joefriday/cpu/cpuinfo"
 )
 
 func fibo(n int) int {
@@ -13,7 +15,14 @@ func fibo(n int) int {
 }
 
 func main() {
+	t := flag.Bool("cpu", false, "")
 	n := flag.Int("n", 1, "")
+
+	if *t {
+		info, _ := cpuinfo.Get()
+		fmt.Printf("%+#v", info)
+	}
+
 	flag.Parse()
 
 	fmt.Println(fibo(*n))
