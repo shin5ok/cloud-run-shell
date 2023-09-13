@@ -20,10 +20,11 @@ type Commanding struct {
 }
 
 type ResponseData struct {
-	Stdout     []string `json:"stdout_output"`
-	Stderr     []string `json:"stderr_output"`
-	Message    string   `json:"message"`
-	ReturnCode int      `json:"return_code"`
+	Stdout     []string         `json:"stdout_output"`
+	Stderr     []string         `json:"stderr_output"`
+	Message    string           `json:"message"`
+	ReturnCode int              `json:"return_code"`
+	Metadata   []map[string]any `json:"metadata"`
 }
 
 var (
