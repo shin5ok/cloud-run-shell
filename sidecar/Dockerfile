@@ -6,7 +6,7 @@ COPY . .
 WORKDIR $ROOT
 RUN GGO_ENABLED=0 GOOS=linux go build -o ./main .
 
-FROM gcr.io/distroless/base-debian11 AS runner
+FROM ubuntu AS runner
 WORKDIR /
 COPY --from=builder /app/main ./main
 # USER nobody
