@@ -9,7 +9,7 @@ spec:
     metadata: 
       annotations: 
         run.googleapis.com/execution-environment: ${GEN}
-        run.googleapis.com/container-dependencies: '{"sidecar":["shellapp"]}'
+        run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
     spec: 
       containers: 
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
