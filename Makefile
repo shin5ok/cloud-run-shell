@@ -18,13 +18,13 @@ bench:
 
 .PHONY: sidecar
 sidecar:
-	( cd sidecar ; docker build -t $(SIDECAR) . )
+	( cd sidecar/ ; docker build -t $(SIDECAR) . )
 	docker push $(SIDECAR)
 
 .PHONY: shellapp
 shellapp:
-	( cd shellapp ; docker build -t $(SHELLAPP) . )
+	( cd shellapp/ ; docker build -t $(SHELLAPP) . )
 	docker push $(SHELLAPP)
 
 .PHONY: all
-buildall: sidecar shellapp deploy
+all: sidecar shellapp deploy
