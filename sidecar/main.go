@@ -17,14 +17,22 @@ import (
 var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 
 func vlogging(ctx context.Context, f func() (string, error)) {
+LOOP:
 	for {
-		data, _ := f()
-		logger.Info(
-			"data", data,
-			"severity", "info",
-		)
-		time.Sleep(time.Duration(time.Second * 1))
+		select {
+		case <-ctx.Done():
+			logger.Info("Receiving signal...")
+			break LOOP
+		default:
+			data, _ := f()
+			logger.Info(
+				"data", data,
+				"severity", "info",
+			)
+			time.Sleep(time.Duration(time.Second * 1))
+		}
 	}
+	os.Exit(1)
 }
 
 func getCPU() (string, error) {
@@ -50,7 +58,8 @@ func getCPU() (string, error) {
 
 func main() {
 	ctx := context.Background()
-	ctx, _ = signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
