@@ -53,6 +53,13 @@ def cmd(command: Command, request: Request, response: Response, x_mygcp_secret =
             metadata=[dict(instance_id=_get_my_id())],
         )
 
+@app.get("/longlong")
+@app.get("/longlong/{s}")
+def long(s: int = 1):
+    import time
+    time.sleep(s)
+    return {"wait":s}
+
 @app.middleware("http")
 async def simple_auth(request: Request, call_next):
     response = await call_next(request)
