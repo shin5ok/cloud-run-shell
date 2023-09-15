@@ -12,9 +12,17 @@ import (
 	"time"
 
 	"log/slog"
+
+	"cloud.google.com/go/compute/metadata"
 )
 
 var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+var instanceId string
+
+func init() {
+	orgInstanceId, _ := metadata.InstanceID()
+	instanceId = orgInstanceId[0:10]
+}
 
 func vlogging(ctx context.Context, f func() (string, error)) {
 LOOP:
@@ -26,6 +34,7 @@ LOOP:
 		default:
 			data, _ := f()
 			logger.Info(
+				"instance_id: "+instanceId,
 				"data", data,
 				"severity", "info",
 			)
