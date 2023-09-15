@@ -1,0 +1,37 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata: 
+  annotations: 
+    run.googleapis.com/launch-stage: BETA
+  name: shellcommand-${GEN}
+spec: 
+  template: 
+    metadata: 
+      annotations: 
+        run.googleapis.com/execution-environment: ${GEN}
+        run.googleapis.com/container-dependencies: '{"sidecar":["shellapp"]}'
+    spec: 
+      containers: 
+      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
+        name: shellapp
+        ports: 
+        - containerPort: 8080
+        volumeMounts: 
+        - mountPath: /var/share
+          name: share
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 10
+          periodSeconds: 3
+      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
+        name: sidecar
+        resources: 
+          limits: 
+            cpu: "1"
+            memory: 256Mi
+        volumeMounts: 
+        - mountPath: /var/share
+          name: share
