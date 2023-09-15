@@ -3,7 +3,7 @@ kind: Service
 metadata: 
   annotations: 
     run.googleapis.com/launch-stage: BETA
-  name: shellcommand-${GEN}
+  name: ${SERVICE_NAME}
 spec: 
   template: 
     metadata: 
@@ -35,3 +35,8 @@ spec:
         volumeMounts: 
         - mountPath: /var/share
           name: share
+      volumes:
+      - name: share
+        emptyDir:
+          medium: Memory
+          sizeLimit: 8Mi
