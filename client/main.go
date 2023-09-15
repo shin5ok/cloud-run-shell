@@ -51,6 +51,7 @@ func main() {
 	defer stop()
 
 	s := spinner.New(spinner.CharSets[9], 300*time.Millisecond)
+	defer s.Stop()
 	s.Start()
 
 	cmd := Commanding{Command: strings.Join(os.Args[1:], " ")}
