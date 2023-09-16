@@ -76,6 +76,14 @@ func main() {
 		req.Header.Add(`Authorization`, `Bearer `+token)
 	}
 
+	go func() {
+		<-ctx.Done()
+		fmt.Println("exiting with context", ctx.Err())
+		defer stop()
+		defer s.Stop()
+		os.Exit(1)
+	}()
+
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
