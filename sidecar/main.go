@@ -5,8 +5,10 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"os/signal"
 	"regexp"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -20,11 +22,11 @@ var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 var instanceId string
 
 func init() {
-	orgInstanceId, _ := metadata.InstanceID()
-	instanceId = orgInstanceId[0:10]
+	orgInstanceName, _ := metadata.InstanceID()
+	instanceId = os.Getenv("K_REVISION") + "_" + orgInstanceName[len(orgInstanceName)-6:]
 }
 
-func vlogging(ctx context.Context, f func() (string, error)) {
+func vlogging(ctx context.Context, f func() (string, error), waitSecond int) {
 LOOP:
 	for {
 		select {
@@ -38,7 +40,7 @@ LOOP:
 				"data", data,
 				"severity", "info",
 			)
-			time.Sleep(time.Duration(time.Second * 1))
+			time.Sleep(time.Second * time.Duration(waitSecond))
 		}
 	}
 	os.Exit(1)
@@ -65,6 +67,24 @@ func getCPU() (string, error) {
 	return data, nil
 }
 
+func getConnNumber() (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	output, err := exec.CommandContext(ctx, "/usr/bin/netstat", "--inet", "-n").CombinedOutput()
+	if err != nil {
+		return err.Error(), err
+	}
+	re := regexp.MustCompile("ESTABLISHED")
+	count := 0
+	for n, line := range strings.Split(string(output), "\n") {
+		_ = n
+		if re.Match([]byte(line)) {
+			count += 1
+		}
+	}
+	return fmt.Sprintf("tcp_established: %d", count), nil
+}
+
 func main() {
 	ctx := context.Background()
 	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
@@ -72,6 +92,7 @@ func main() {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-	go vlogging(ctx, getCPU)
+	go vlogging(ctx, getCPU, 2)
+	go vlogging(ctx, getConnNumber, 5)
 	wg.Wait()
 }
