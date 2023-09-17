@@ -10,7 +10,9 @@ spec:
       annotations: 
         run.googleapis.com/execution-environment: ${GEN}
         run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
+        autoscaling.knative.dev/maxScale: '1'
     spec: 
+      containerConcurrency: 1000
       containers: 
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
         name: shellapp
@@ -30,8 +32,11 @@ spec:
         name: sidecar
         resources: 
           limits: 
-            cpu: "1"
-            memory: 256Mi
+            cpu: "2"
+            memory: 2Gi
+        env:
+          - name: GEN
+            value: ${GEN}
         volumeMounts: 
         - mountPath: /var/share
           name: share
