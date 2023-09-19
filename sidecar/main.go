@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"os/signal"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"syscall"
@@ -20,10 +21,12 @@ import (
 
 var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
 var instanceId string
+var isDebug bool
 
 func init() {
 	orgInstanceName, _ := metadata.InstanceID()
 	instanceId = os.Getenv("K_REVISION") + "_" + orgInstanceName[len(orgInstanceName)-6:]
+	isDebug = os.Getenv("DEBUG") != ""
 }
 
 func vlogging(ctx context.Context, f func() (string, error), waitSecond int) {
@@ -36,7 +39,7 @@ LOOP:
 		default:
 			data, _ := f()
 			logger.Info(
-				"instance_id: "+instanceId,
+				"instance_id="+instanceId,
 				"data", data,
 				"severity", "info",
 			)
@@ -70,25 +73,39 @@ func getCPU() (string, error) {
 func getConnNumber() (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	output, err := exec.CommandContext(ctx, "/usr/bin/netstat", "--inet", "-n").CombinedOutput()
+	output, err := exec.CommandContext(ctx, "netstat", "--inet", "-n").CombinedOutput()
 	if err != nil {
 		return err.Error(), err
 	}
 	re := regexp.MustCompile("ESTABLISHED")
 	count := 0
 	for n, line := range strings.Split(string(output), "\n") {
-		_ = n
 		if re.Match([]byte(line)) {
+			s := strconv.Itoa(n)
+			debugPrint(s, line)
 			count += 1
 		}
 	}
 	return fmt.Sprintf("tcp_established: %d", count), nil
 }
 
+func debugPrint(line ...string) {
+	if isDebug {
+		fmt.Println(strings.Join(line, " "))
+	}
+}
+
 func main() {
 	ctx := context.Background()
 	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	go func() {
+		<-ctx.Done()
+		stop()
+		slog.Info("stopping...", "instance_id", instanceId)
+		os.Exit(0)
+	}()
 
 	var wg sync.WaitGroup
 	wg.Add(1)
