@@ -10,12 +10,22 @@ spec:
       annotations: 
         run.googleapis.com/execution-environment: ${GEN}
         run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
+        run.googleapis.com/cpu-throttling: 'true'
+        run.googleapis.com/startup-cpu-boost: 'false'
         autoscaling.knative.dev/maxScale: '1'
+        autoscaling.knative.dev/minScale: '0'
+        run.googleapis.com/cloudsql-instances: ${GOOGLE_CLOUD_PROJECT}:asia-northeast1:test-instance
+        run.googleapis.com/network-interfaces: '[{"network":"my-network","subnetwork":"my-network"}]'
+        run.googleapis.com/vpc-access-egress: private-ranges-only
     spec: 
       containerConcurrency: 1000
       containers: 
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
         name: shellapp
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
         ports: 
         - containerPort: 8080
         volumeMounts: 
@@ -27,16 +37,18 @@ spec:
           initialDelaySeconds: 5
           timeoutSeconds: 1
           failureThreshold: 10
-          periodSeconds: 3
+          periodSeconds: 2
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
         name: sidecar
         resources: 
           limits: 
-            cpu: "2"
-            memory: 2Gi
+            cpu: "1"
+            memory: 256Mi
         env:
           - name: GEN
             value: ${GEN}
+          - name: DEBUG
+            value: "1"
         volumeMounts: 
         - mountPath: /var/share
           name: share
