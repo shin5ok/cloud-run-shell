@@ -9,6 +9,7 @@ client:
 
 .PHONY: deploy
 deploy:
+	export DEPLOY_START=$(shell date '+%Y%m%d%H%M%S')
 	envsubst < cloudrun.yaml | gcloud run services replace - --region=$(REGION)
 	gcloud run services add-iam-policy-binding --member=allUsers $(SERVICE_NAME) --region=$(REGION) --role=roles/run.invoker
 

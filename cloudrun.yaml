@@ -49,6 +49,8 @@ spec:
             value: ${GEN}
           - name: DEBUG
             value: "1"
+          - name: DEPLOY_START
+            value: "${DEPLOY_START}"
         volumeMounts: 
         - mountPath: /var/share
           name: share
