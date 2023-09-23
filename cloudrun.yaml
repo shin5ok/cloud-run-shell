@@ -3,13 +3,13 @@ kind: Service
 metadata: 
   annotations: 
     run.googleapis.com/launch-stage: BETA
-  name: sidecar-test
+  name: ${SERVICE_NAME}
 spec: 
   template: 
     metadata: 
       annotations: 
         run.googleapis.com/execution-environment: ${GEN}
-        run.googleapis.com/container-dependencies: '{"mainapp":["sidecar"]}'
+        run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
         run.googleapis.com/cpu-throttling: 'true'
         run.googleapis.com/startup-cpu-boost: 'false'
         autoscaling.knative.dev/maxScale: '1'
@@ -20,15 +20,8 @@ spec:
     spec: 
       containerConcurrency: 1000
       containers: 
-      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/mainapp
-        startupProbe:
-          httpGet:
-            path: /ping
-            # port: 8080
-            httpHeaders:
-              - name: X-MyGCP-Secret
-                value: gcp
-        name: mainapp
+      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
+        name: shellapp
         resources:
           limits:
             cpu: "2"
@@ -38,13 +31,13 @@ spec:
         volumeMounts: 
         - mountPath: /var/share
           name: share
-        # startupProbe:
-        #   tcpSocket:
-        #     port: 8080
-        #   initialDelaySeconds: 5
-        #   timeoutSeconds: 1
-        #   failureThreshold: 10
-        #   periodSeconds: 2
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          failureThreshold: 10
+          periodSeconds: 2
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
         name: sidecar
         resources: 
