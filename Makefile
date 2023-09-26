@@ -1,7 +1,7 @@
 SIDECAR := asia-northeast1-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/sidecar
-mainapp := asia-northeast1-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/mainapp
+shellapp := asia-northeast1-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/shellapp
 REGION := asia-northeast1
-SERVICE_NAME := sidecar-test
+SERVICE_NAME := $(SERVICE_NAME)
 
 .PHONY: client
 client:
@@ -22,10 +22,10 @@ sidecar:
 	( cd sidecar/ ; docker build -t $(SIDECAR) . )
 	docker push $(SIDECAR)
 
-.PHONY: mainapp
-mainapp:
-	( cd mainapp/ ; docker build -t $(mainapp) . )
-	docker push $(mainapp)
+.PHONY: shellapp
+shellapp:
+	( cd shellapp/ ; docker build -t $(shellapp) . )
+	docker push $(shellapp)
 
 .PHONY: all
-all: sidecar mainapp deploy
+all: sidecar shellapp deploy
