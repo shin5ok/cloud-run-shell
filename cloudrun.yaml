@@ -12,13 +12,13 @@ spec:
         run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
         run.googleapis.com/cpu-throttling: 'true'
         run.googleapis.com/startup-cpu-boost: 'false'
-        autoscaling.knative.dev/maxScale: '1'
+        autoscaling.knative.dev/maxScale: '5'
         autoscaling.knative.dev/minScale: '0'
         run.googleapis.com/cloudsql-instances: ${GOOGLE_CLOUD_PROJECT}:asia-northeast1:test-instance
         run.googleapis.com/network-interfaces: '[{"network":"my-network","subnetwork":"my-network"}]'
         run.googleapis.com/vpc-access-egress: private-ranges-only
     spec: 
-      containerConcurrency: 1000
+      containerConcurrency: 1
       containers: 
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
         name: shellapp
@@ -31,6 +31,9 @@ spec:
         volumeMounts: 
         - mountPath: /var/share
           name: share
+        env:
+          - name: DEPLOY_START
+            value: "${DEPLOY_START}"
         startupProbe:
           tcpSocket:
             port: 8080
