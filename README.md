@@ -51,7 +51,6 @@ ls -l
 total 44
 -rw-r--r-- 1 root root  1109 Sep 30 02:31 Dockerfile
 -rw-r--r-- 1 root root    31 Sep 15 14:06 Procfile
-drwxr-xr-x 2 root root    80 Sep 30 02:44 __pycache__
 drwxr-xr-x 2 root root     0 Sep 30 02:33 byte-unixbench
 -rw-r--r-- 1 root root   321 Sep 15 14:06 deploy.sh
 drwxr-xr-x 2 root root    80 Sep 30 02:49 google-cloud-sdk
