@@ -9,7 +9,7 @@ RUN poetry config virtualenvs.in-project true
 
 RUN poetry install; \
     apt-get update && \
-    apt-get install -y curl iproute2 git procps net-tools build-essential iperf3 qperf wget apache2 golang ; \
+    apt-get install -y curl iproute2 git procps net-tools build-essential iperf3 qperf wget apache2 golang sysbench imagemagick ffmpeg ; \
     apt-get install -y lsb-release; \
     gcsFuseRepo=gcsfuse-`lsb_release -c -s`; \
     echo "deb http://packages.cloud.google.com/apt $gcsFuseRepo main" | \
