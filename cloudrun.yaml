@@ -12,7 +12,7 @@ spec:
         run.googleapis.com/container-dependencies: '{"shellapp":["sidecar"]}'
         run.googleapis.com/cpu-throttling: 'true'
         run.googleapis.com/startup-cpu-boost: 'false'
-        autoscaling.knative.dev/maxScale: '5'
+        autoscaling.knative.dev/maxScale: '1'
         autoscaling.knative.dev/minScale: '0'
         run.googleapis.com/cloudsql-instances: ${GOOGLE_CLOUD_PROJECT}:asia-northeast1:test-instance
         run.googleapis.com/network-interfaces: '[{"network":"my-network","subnetwork":"my-network"}]'
