@@ -25,7 +25,7 @@ cd client/
 ```
 You're ready to run something on your Cloud Run service.
 
-#### 2. Just Run it  
+#### 2. Just Run it
 
 Run it with your any command.
 ```
@@ -35,4 +35,38 @@ Run it with your any command.
 You may see output formatted JSON as below.
 ```
 JSON_MODE=1 ./shell ps aux
+```
+
+### Option: Simple shell without input of client command
+
+After this, You should input command you want in one liner.
+```
+xargs -L1 ./client/shell
+```
+
+Like this,
+```
+$ xargs -L1 ./client/shell
+ls -l
+total 44
+-rw-r--r-- 1 root root  1109 Sep 30 02:31 Dockerfile
+-rw-r--r-- 1 root root    31 Sep 15 14:06 Procfile
+drwxr-xr-x 2 root root    80 Sep 30 02:44 __pycache__
+drwxr-xr-x 2 root root     0 Sep 30 02:33 byte-unixbench
+-rw-r--r-- 1 root root   321 Sep 15 14:06 deploy.sh
+drwxr-xr-x 2 root root    80 Sep 30 02:49 google-cloud-sdk
+-rw-r--r-- 1 root root  2472 Sep 27 09:51 main.py
+-rw-r--r-- 1 root root 39332 Sep 15 14:06 poetry.lock
+-rw-r--r-- 1 root root   444 Sep 15 14:06 pyproject.toml
+
+gcloud storage cp gs://shingo-ar-test0729/testvideo.mp4 /tmp
+
+ls /tmp/
+cloudsql-proxy-tmp
+testvideo.mp4
+
+cd /tmp; ffmpeg -i testvideo.mp4 testvideo.mov
+
+ls -l /tmp/testvideo.mov
+-rw-r--r-- 1 root root 29605125 Sep 30 02:54 /tmp/testvideo.mov
 ```
