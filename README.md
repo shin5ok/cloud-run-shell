@@ -37,7 +37,7 @@ You may see output formatted JSON as below.
 JSON_MODE=1 ./shell ps aux
 ```
 
-### Option: Simple shell without input of client command
+### Option: Simple pseudo shell without typing client command
 
 After this, You should input command you want in one liner.
 ```
