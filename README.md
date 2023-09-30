@@ -23,11 +23,12 @@ Just type this,
 ```
 make all
 ```
-***Notice***
+***Notice***  
 If you want your service not to require ID Token,
 ```
 make expose
 ```
+It means the same as option '--allow-unauthenticated'.
 
 ## Usage
 ### Prepare to use in common
