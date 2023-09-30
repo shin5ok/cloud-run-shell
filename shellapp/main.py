@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends, Header, Request, Response, APIRouter, stat
 from fastapi.responses import JSONResponse
 from pydantic import *
 from typing import Union, List
-import uvicorn
+import hypercorn
 import subprocess
 from subprocess import PIPE
 import requests
@@ -82,10 +82,12 @@ async def simple_auth(request: Request, call_next):
     return response
 
 if __name__ == "__main__":
-    options = {
-            'port': int(port),
-            'host': '0.0.0.0',
-            'workers': 256,
-            'reload': True,
-        }
-    uvicorn.run("main:app", **options)
+
+    import asyncio
+    from hypercorn.config import Config
+    from hypercorn.asyncio import serve
+    
+    config = Config()
+    config.bind = ['0.0.0.0:'+port]
+    config.keep_alive_timeout = 120
+    asyncio.run(serve(app, config))
