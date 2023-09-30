@@ -10,7 +10,6 @@ client:
 .PHONY: deploy
 deploy:
 	DEPLOY_START=$(shell date '+%Y%m%d%H%M%S') envsubst < cloudrun.yaml | gcloud run services replace - --region=$(REGION)
-	gcloud run services add-iam-policy-binding --member=allUsers $(SERVICE_NAME) --region=$(REGION) --role=roles/run.invoker
 
 .PHONY: bench
 bench:
@@ -28,3 +27,7 @@ shellapp:
 
 .PHONY: all
 all: sidecar shellapp deploy
+
+.PHONY: expose
+expose:
+	gcloud run services add-iam-policy-binding --member=allUsers $(SERVICE_NAME) --region=$(REGION) --role=roles/run.invoker

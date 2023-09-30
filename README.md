@@ -1,6 +1,33 @@
 ## Warning
-### Don't use --allow-authenticated option while deploying your Cloud Run
 ### You have to use this api carefully or it would be serious risky
+
+## Prerequisite
+### Some tools
+- Google Cloud project enabled billing
+- Docker
+- make
+- envsubst  
+
+You may encounter something wrong if you use M1 Mac.  
+Consider working on other arch, such as Cloud Shell.
+
+## Deploy
+### Build two containers, push them to Artifact Registry and then deploy its service.
+Set some envs,
+```
+export GEN=gen1 # or gen2
+export SERVICE_NAME=<your service name>
+export SECRET=<your secret string like 861665e65f4a11eea1efc3d57ac216d6>
+```
+Just type this,
+```
+make all
+```
+***Notice***
+If you want your service not to require ID Token,
+```
+make expose
+```
 
 ## Usage
 ### Prepare to use in common
