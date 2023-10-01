@@ -20,13 +20,14 @@ spec:
         # run.googleapis.com/ingress: all
     spec: 
       containerConcurrency: 1
+      timeoutSeconds: 3600
       containers: 
       - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
         name: shellapp
-        # resources:
-        #   limits:
-        #     cpu: "2"
-        #     memory: 2Gi
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
         ports: 
         - containerPort: 8080
           name: h2c
