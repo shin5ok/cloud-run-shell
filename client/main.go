@@ -79,7 +79,7 @@ func main() {
 
 	go func() {
 		<-ctx.Done()
-		fmt.Println("exiting with context", ctx.Err())
+		fmt.Println("exiting with context:", ctx.Err())
 		defer stop()
 		defer s.Stop()
 		os.Exit(1)
@@ -88,8 +88,8 @@ func main() {
 	client := &http.Client{
 		Transport: &http.Transport{
 			DialContext: (&net.Dialer{
-				Timeout:   10 * time.Second,
-				KeepAlive: 30 * time.Second,
+				Timeout:   1 * time.Hour,
+				KeepAlive: 1 * time.Hour,
 				DualStack: true,
 			}).DialContext,
 			ForceAttemptHTTP2: true,
@@ -101,7 +101,7 @@ func main() {
 	}
 
 	if res.StatusCode != http.StatusOK {
-		panic(`Something wrong...it might have invalid SECRET?`)
+		panic(fmt.Sprintf("Something wrong with code: %d...it might have invalid SECRET?", res.StatusCode))
 	}
 
 	defer res.Body.Close()
