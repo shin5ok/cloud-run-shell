@@ -1,6 +1,6 @@
-SIDECAR := asia-northeast1-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/sidecar
-shellapp := asia-northeast1-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/shellapp
 REGION := asia-northeast1
+SIDECAR := $(REGION)-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/sidecar
+shellapp := $(REGION)-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/shellapp
 SERVICE_NAME := $(SERVICE_NAME)
 
 .PHONY: client
@@ -9,7 +9,7 @@ client:
 
 .PHONY: deploy
 deploy:
-	DEPLOY_START=$(shell date '+%Y%m%d%H%M%S') envsubst < cloudrun.yaml | gcloud run services replace - --region=$(REGION)
+	REGION=$(REGION) DEPLOY_START=$(shell date '+%Y%m%d%H%M%S') envsubst < cloudrun.yaml | gcloud run services replace - --region=$(REGION)
 
 .PHONY: bench
 bench:
@@ -27,6 +27,10 @@ shellapp:
 
 .PHONY: all
 all: sidecar shellapp deploy
+
+.PHONY: repo
+repo:
+	gcloud artifacts repositories create --location=$(REGION) --repository-format=docker my-app
 
 .PHONY: expose
 expose:

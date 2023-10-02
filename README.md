@@ -6,6 +6,7 @@
 - Google Cloud project enabled billing
 - Docker
 - make
+- jq
 - envsubst  
 
 You may encounter something wrong if you use M1 Mac.  
@@ -17,8 +18,14 @@ Set some envs,
 ```
 export GEN=gen1 # or gen2
 export SERVICE_NAME=<your service name>
-export SECRET=<your secret string like 861665e65f4a11eea1efc3d57ac216d6>
+export SECRET=<your secret string like 861665e65f4a1>
 ```
+
+Prepare a repo for your containers,
+```
+make repo
+```
+
 Just type this,
 ```
 make all

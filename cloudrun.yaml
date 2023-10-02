@@ -14,15 +14,15 @@ spec:
         run.googleapis.com/startup-cpu-boost: 'true'
         autoscaling.knative.dev/maxScale: '1'
         autoscaling.knative.dev/minScale: '0'
-        run.googleapis.com/cloudsql-instances: ${GOOGLE_CLOUD_PROJECT}:asia-northeast1:test-instance
+        run.googleapis.com/cloudsql-instances: ${GOOGLE_CLOUD_PROJECT}:${REGION}:test-instance
         run.googleapis.com/network-interfaces: '[{"network":"my-network","subnetwork":"my-network"}]'
         run.googleapis.com/vpc-access-egress: private-ranges-only
         # run.googleapis.com/ingress: all
     spec: 
-      containerConcurrency: 1
+      containerConcurrency: 100
       timeoutSeconds: 3600
       containers: 
-      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
+      - image: ${REGION}-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/shellapp
         name: shellapp
         resources:
           limits:
@@ -44,12 +44,12 @@ spec:
           timeoutSeconds: 1
           failureThreshold: 10
           periodSeconds: 2
-      - image: asia-northeast1-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
+      - image: ${REGION}-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
         name: sidecar
-        resources: 
-          limits: 
-            cpu: "4"
-            memory: 2Gi
+        # resources: 
+        #   limits: 
+        #     cpu: "4"
+        #     memory: 2Gi
         env:
           - name: GEN
             value: ${GEN}
