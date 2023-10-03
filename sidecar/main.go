@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/signal"
+	"path"
 	"regexp"
 	"strconv"
 	"strings"
@@ -15,6 +17,8 @@ import (
 	"time"
 
 	"log/slog"
+
+	"encoding/json"
 
 	"cloud.google.com/go/compute/metadata"
 )
@@ -89,6 +93,59 @@ func getConnNumber() (string, error) {
 	return fmt.Sprintf("tcp_established: %d", count), nil
 }
 
+func getCgroups() (string, error) {
+	result := map[string]string{}
+	path := path.Join("/sys/fs/cgroup", "cpuset")
+
+	dir, err := os.Open(path)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	files, err := dir.Readdir(-1)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	pattern := regexp.MustCompile(`^cpuset\.+`)
+
+	for n, file := range files {
+
+		if !pattern.Match([]byte(file.Name())) {
+			continue
+		}
+
+		f, err := os.Open(path + "/" + file.Name())
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		data, err := io.ReadAll(f)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		dataString := string(data)
+		dataString = strings.ReplaceAll(dataString, "\n", ",")
+
+		key := fmt.Sprintf("%d:%s", n, file.Name())
+		result[key] = dataString
+
+		f.Close()
+
+	}
+
+	dir.Close()
+
+	dataJson, _ := json.Marshal(result)
+
+	return string(dataJson), nil
+}
+
 func debugPrint(line ...string) {
 	if isDebug {
 		fmt.Println(strings.Join(line, " "))
@@ -111,5 +168,6 @@ func main() {
 	wg.Add(1)
 	go vlogging(ctx, getCPU, 2)
 	go vlogging(ctx, getConnNumber, 5)
+	go vlogging(ctx, getCgroups, 5)
 	wg.Wait()
 }
