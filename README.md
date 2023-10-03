@@ -12,24 +12,29 @@
 You may encounter something wrong if you use M1 Mac.  
 Consider working on other arch, such as Cloud Shell.
 
+Prepare a repo for your containers for the first time,
+```
+make repo
+```
+
+## Edit config of Cloud Run service
+Configure cloudrun.yaml that will be used by Cloud Run you deploy.
+
 ## Deploy
 ### Build two containers, push them to Artifact Registry and then deploy its service.
 Set some envs,
 ```
 export GEN=gen1 # or gen2
 export SERVICE_NAME=<your service name>
-export SECRET=<your secret string like 861665e65f4a1>
-```
-
-Prepare a repo for your containers,
-```
-make repo
+export SECRET=<your secret string like 861665xxxxxxx>
 ```
 
 Just type this,
 ```
 make all
 ```
+If you want to deploy another one using the same image, do again this part.
+
 ***Notice***  
 If you want your service not to require ID Token,
 ```
