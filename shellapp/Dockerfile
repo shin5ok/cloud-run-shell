@@ -10,7 +10,7 @@ RUN poetry config virtualenvs.in-project true
 RUN poetry install; \
     apt-get update && \
     apt-get install -y curl iproute2 git procps net-tools build-essential iperf3 qperf wget apache2 golang sysbench imagemagick ffmpeg ; \
-    apt-get install -y lsb-release time libreadline-dev zlib1g-dev; \
+    apt-get install -y lsb-release time nfs-common libreadline-dev zlib1g-dev; \
     gcsFuseRepo=gcsfuse-`lsb_release -c -s`; \
     echo "deb https://packages.cloud.google.com/apt $gcsFuseRepo main" | \
     tee /etc/apt/sources.list.d/gcsfuse.list; \
