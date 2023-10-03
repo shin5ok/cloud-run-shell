@@ -12,6 +12,7 @@
 You may encounter something wrong if you use M1 Mac.  
 Consider working on other arch, such as Cloud Shell.
 
+### Make container image repository of Artifact Registry
 Prepare a repo for your containers for the first time,
 ```
 make repo
