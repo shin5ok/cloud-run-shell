@@ -102,6 +102,7 @@ func getCgroups() (string, error) {
 		fmt.Println(err)
 		return "", err
 	}
+	defer dir.Close()
 
 	files, err := dir.Readdir(-1)
 	if err != nil {
@@ -138,8 +139,6 @@ func getCgroups() (string, error) {
 		f.Close()
 
 	}
-
-	dir.Close()
 
 	dataJson, _ := json.Marshal(result)
 
