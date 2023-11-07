@@ -75,7 +75,7 @@ func main() {
 	}
 
 	if token != "" {
-		req.Header.Add(`Authorization`, `Bearer `+token)
+		req.Header.Add(`Authorization`, fmt.Sprintf("Bearer %s", token))
 	}
 
 	go func() {
