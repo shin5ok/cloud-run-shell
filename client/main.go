@@ -52,7 +52,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 
-	s := spinner.New(spinner.CharSets[9], 300*time.Millisecond)
+	s := spinner.New(spinner.CharSets[26], 300*time.Millisecond)
 	defer s.Stop()
 	s.Start()
 
