@@ -38,10 +38,11 @@ var (
 
 func init() {
 	if url == "" {
-		panic(`
+		fmt.Println(`
 	Set url like this,
 	export URL=https://xxxxxxx-an.a.run.app
 		`)
+		os.Exit(0)
 	}
 
 }
