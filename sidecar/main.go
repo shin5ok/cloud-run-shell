@@ -28,7 +28,10 @@ var instanceId string
 var isDebug bool
 
 func init() {
-	orgInstanceName, _ := metadata.InstanceID()
+	orgInstanceName, err := metadata.InstanceID()
+	if err != nil {
+		panic(err)
+	}
 	instanceId = os.Getenv("K_REVISION") + "_" + orgInstanceName[len(orgInstanceName)-6:]
 	isDebug = os.Getenv("DEBUG") != ""
 }
