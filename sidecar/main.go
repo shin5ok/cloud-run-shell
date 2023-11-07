@@ -41,7 +41,11 @@ LOOP:
 			logger.Info("Receiving signal...")
 			break LOOP
 		default:
-			data, _ := f()
+			data, err := f()
+			if err != nil {
+				logger.Error(err.Error())
+				return
+			}
 			logger.Info(
 				"instance_id="+instanceId,
 				"data", data,
