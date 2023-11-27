@@ -30,6 +30,7 @@ all: sidecar shellapp deploy
 
 .PHONY: repo
 repo:
+	gcloud services enable artifactregistry.googleapis.com
 	gcloud artifacts repositories create --location=$(REGION) --repository-format=docker my-app
 
 .PHONY: expose
