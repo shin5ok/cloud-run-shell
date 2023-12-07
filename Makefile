@@ -2,6 +2,7 @@ REGION := asia-northeast1
 SIDECAR := $(REGION)-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/sidecar
 shellapp := $(REGION)-docker.pkg.dev/$(GOOGLE_CLOUD_PROJECT)/my-app/shellapp
 SERVICE_NAME := $(SERVICE_NAME)
+REPO_NAME := my-app
 
 .PHONY: client
 client:
@@ -31,7 +32,8 @@ all: sidecar shellapp deploy
 .PHONY: repo
 repo:
 	gcloud services enable run.googleapis.com artifactregistry.googleapis.com
-	gcloud artifacts repositories create --location=$(REGION) --repository-format=docker my-app
+	gcloud artifacts repositories describe --location=$(REGION) $(REPO_NAME) > /dev/null 2>&1 || \
+		gcloud artifacts repositories create --location=$(REGION) --repository-format=docker $(REPO_NAME)
 
 .PHONY: expose
 expose:
