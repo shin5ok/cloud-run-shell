@@ -65,7 +65,7 @@ async def simple_auth(request: Request, call_next):
     response = await call_next(request)
     secret_in_request = request.headers.get(secret_header_key)
 
-    if not secret_in_request:
+    if secret and not secret_in_request:
         message = "auth required"
         return JSONResponse(
             dict(message=message),
