@@ -16,6 +16,7 @@ uvicorn = "^0.22.0"
 requests = "^2.31.0"
 hypercorn = "^0.14.4"
 mypy = "^1.6.1"
+aiologger = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 

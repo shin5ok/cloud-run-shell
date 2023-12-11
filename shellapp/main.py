@@ -1,14 +1,19 @@
 import os
-from fastapi import FastAPI, Depends, Header, Request, Response, APIRouter, status
+from fastapi import FastAPI, Header, Request, Response, status
 from fastapi.responses import JSONResponse
 from pydantic import *
 import subprocess
 from subprocess import PIPE
-import requests
+import requests, logging, sys
 
-secret = os.environ.get("SECRET", "gcp")
+secret = os.environ.get("SECRET")
 listen_port = os.environ.get("PORT", "8080")
 secret_header_key = "X-MyGCP-Secret"
+
+logger = logging.getLogger("uvicorn")
+handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 app = FastAPI()
 
@@ -40,6 +45,8 @@ class Output(BaseModel):
 @app.post("/shellcommand")
 def cmd(command: Command, request: Request, response: Response, x_mygcp_secret = Header(default=None)):
 
+    logger.info(command)
+
     cmd_str = command.command
 
     proc = subprocess.run(cmd_str, shell=True, stdout=PIPE, stderr=PIPE, text=True)
@@ -60,35 +67,47 @@ def long(s: int = 1):
     time.sleep(s)
     return {"wait":s}
 
+@app.get("/ping")
+def _ping():
+    logger.info("GET /ping")
+    return JSONResponse(
+        "pong",
+        status.HTTP_200_OK
+    )
+
 @app.middleware("http")
 async def simple_auth(request: Request, call_next):
     response = await call_next(request)
-    secret_in_request = request.headers.get(secret_header_key)
 
-    if secret and not secret_in_request:
-        message = "auth required"
-        return JSONResponse(
-            dict(message=message),
-            status.HTTP_401_UNAUTHORIZED
-        )
+    if secret:
+        if not secret_in_request:
+            message = "auth required"
+            return JSONResponse(
+                dict(message=message),
+                status.HTTP_401_UNAUTHORIZED
+            )
 
-    if secret != secret_in_request:
-        message = "auth error"
-        return JSONResponse(
-            dict(message=message),
-            status.HTTP_403_FORBIDDEN
-        )
+        secret_in_request = request.headers.get(secret_header_key)
+        if secret != secret_in_request:
+            message = "auth error"
+            return JSONResponse(
+                dict(message=message),
+                status.HTTP_403_FORBIDDEN
+            )
 
     return response
 
-if __name__ == "__main__":
+def main():
     import asyncio
-    import hypercorn
+
     from hypercorn.config import Config
     from hypercorn.asyncio import serve
-    
+
     config = Config()
     config.bind = [f"0.0.0.0:{listen_port}"]
     config.keep_alive_timeout = 3600
     config.read_timeout = 3600
     asyncio.run(serve(app, config))
+
+if __name__ == "__main__":
+    main()
