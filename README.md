@@ -10,7 +10,7 @@
 - envsubst  
 
 You may encounter something wrong if you use M1 Mac.  
-Consider working on other arch, such as Cloud Shell.
+Consider working on other architecture, such as Cloud Shell.
 
 ### Make container image repository of Artifact Registry
 Prepare a repo for your containers for the first time,
@@ -25,9 +25,8 @@ Configure cloudrun.yaml that will be used by Cloud Run you deploy.
 ### Build two containers, push them to Artifact Registry and then deploy its service.
 Set some envs,
 ```
-export GEN=gen1 # or gen2
+export GEN=gen1 # or gen2, choose the generation of platform
 export SERVICE_NAME=<your service name>
-export SECRET=<your secret string like 861665xxxxxxx>
 ```
 
 Just type this,
@@ -53,6 +52,7 @@ If the Cloud Run sevice requires ID Token, run as below,
 ```
 export TOKEN=$(gcloud auth print-identity-token)
 ```
+You need to run it again because it will expire in 60 mins.
 
 ### With CLI
 
