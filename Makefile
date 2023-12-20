@@ -28,10 +28,6 @@ all: sidecar shellapp deploy
 repo:
 	gcloud artifacts repositories create --location=$(REGION) --repository-format=docker my-app
 
-.PHONY: bench
-bench:
-	( cd bench/ ; go test -timeout 3600m -count 1 -bench . )
-
 .PHONY: expose
 expose:
 	gcloud run services add-iam-policy-binding --member=allUsers $(SERVICE_NAME) --region=$(REGION) --role=roles/run.invoker
