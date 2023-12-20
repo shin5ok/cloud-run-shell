@@ -2,9 +2,9 @@
 ### You have to use this api carefully or it would be serious risky
 
 ## Prerequisite
-### Some tools
+### Some tools are required
 - Google Cloud project enabled billing
-- Docker
+- Docker engine
 - make
 - jq
 - envsubst  
