@@ -24,7 +24,7 @@ import (
 )
 
 var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
-var instanceId string
+var instanceID string
 var isDebug bool
 
 func init() {
@@ -32,7 +32,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	instanceId = os.Getenv("K_REVISION") + "_" + orgInstanceName[len(orgInstanceName)-6:]
+	instanceID = os.Getenv("K_REVISION") + "_" + orgInstanceName[len(orgInstanceName)-6:]
 	isDebug = os.Getenv("DEBUG") != ""
 }
 
@@ -50,7 +50,7 @@ LOOP:
 				return
 			}
 			logger.Info(
-				"instance_id="+instanceId,
+				"instance_id="+instanceID,
 				"data", data,
 				"severity", "info",
 			)
@@ -166,7 +166,7 @@ func main() {
 	go func() {
 		<-ctx.Done()
 		stop()
-		slog.Info("stopping...", "instance_id", instanceId)
+		slog.Info("stopping...", "instance_id", instanceID)
 		os.Exit(0)
 	}()
 
