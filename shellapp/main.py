@@ -26,8 +26,7 @@ def _get_my_id() -> str:
     try:
         headers = {'Metadata-Flavor':'Google'}
         response = requests.get("http://metadata.google.internal/computeMetadata/v1/instance/id", headers=headers, timeout=0.1)
-        my_id = response.content
-        return my_id
+        return response.content
     except:
         return "__no_name__"
 
@@ -59,13 +58,6 @@ def cmd(command: Command, request: Request, response: Response, x_mygcp_secret =
             return_code=proc.returncode,
             metadata=[dict(instance_id=_get_my_id())],
         )
-
-@app.get("/longlong")
-@app.get("/longlong/{s}")
-def long(s: int = 1):
-    import time
-    time.sleep(s)
-    return {"wait":s}
 
 @app.get("/ping")
 def _ping():
