@@ -13,12 +13,12 @@ deploy:
 
 .PHONY: sidecar
 sidecar:
-	( cd sidecar/ ; DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t $(SIDECAR) . )
+	( cd sidecar/ ; docker build -t $(SIDECAR) . )
 	docker push $(SIDECAR)
 
 .PHONY: shellapp
 shellapp:
-	( cd shellapp/ ; DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -t $(shellapp) . )
+	( cd shellapp/ ; docker build -t $(shellapp) . )
 	docker push $(shellapp)
 
 .PHONY: all
