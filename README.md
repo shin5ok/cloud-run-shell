@@ -4,7 +4,7 @@
 ## Prerequisite
 ### Some tools are required
 - Google Cloud project enabled billing
-- Docker engine
+- Docker engine(Recommended: Docker CE)
 - make
 - jq
 - envsubst  
