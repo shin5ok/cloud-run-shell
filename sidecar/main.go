@@ -175,12 +175,9 @@ func main() {
 	go func() {
 		r := chi.NewRouter()
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			logger.Info("sidecar")
-			hostname := os.Getenv("HOSTNAME")
-			if hostname == "" {
-				hostname = "unknown"
-			}
-			w.Write([]byte(fmt.Sprintf("%s is running on sidecar", hostname)))
+			response := fmt.Sprintf("%s on sidecar", instanceID)
+			logger.Info(response)
+			w.Write([]byte(response))
 		})
 		http.ListenAndServe(":8090", r)
 	}()
