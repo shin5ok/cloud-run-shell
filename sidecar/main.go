@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -21,6 +22,7 @@ import (
 	"encoding/json"
 
 	"cloud.google.com/go/compute/metadata"
+	"github.com/go-chi/chi"
 )
 
 var logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
@@ -168,6 +170,19 @@ func main() {
 		stop()
 		slog.Info("stopping...", "instance_id", instanceID)
 		os.Exit(0)
+	}()
+
+	go func() {
+		r := chi.NewRouter()
+		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+			logger.Info("sidecar")
+			hostname := os.Getenv("HOSTNAME")
+			if hostname == "" {
+				hostname = "unknown"
+			}
+			w.Write([]byte(fmt.Sprintf("%s is running on sidecar", hostname)))
+		})
+		http.ListenAndServe(":8090", r)
 	}()
 
 	var wg sync.WaitGroup
