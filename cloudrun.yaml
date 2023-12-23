@@ -46,10 +46,10 @@ spec:
           periodSeconds: 2
       - image: ${REGION}-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT}/my-app/sidecar
         name: sidecar
-        # resources: 
-        #   limits: 
-        #     cpu: "4"
-        #     memory: 2Gi
+        resources:
+          limits:
+            cpu: "1"
+            memory: 512Mi
         env:
           - name: GEN
             value: ${GEN}
